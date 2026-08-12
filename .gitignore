@@ -8,6 +8,8 @@ target/
 .env
 .env.*
 !.env.example
+render.env
+**/render.env
 atlas-credentials.env
 **/atlas-credentials.env
 credentials.env
