@@ -1,0 +1,15 @@
+# Docker build context exclusions
+.git
+.gitignore
+.env
+.env.*
+!.env.example
+atlas-credentials.env
+credentials.env
+*credentials*.env
+target/
+frontend/node_modules/
+frontend/dist/
+Dockerfile
+docker-compose.yml
+README.md

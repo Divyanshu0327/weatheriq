@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo:8
+    container_name: weatheriq-mongodb
+    ports:
+      - "27017:27017"
+    environment:
+      - MONGO_INITDB_DATABASE=weatheriq
+    volumes:
+      - mongo-data:/data/db
+
+  backend:
+    build: .
+    container_name: weatheriq-backend
+    ports:
+      - "8080:8080"
+    environment:
+      - MONGODB_URI=mongodb://mongodb:27017/weatheriq
+      - MONGODB_DATABASE=weatheriq
+      - JWT_SECRET=LocalDevSuperSecretKeyForJWTSigningWhichIsAtLeast256BitsLong2026
+      - JWT_EXPIRATION=86400000
+      - FRONTEND_URL=http://localhost:5173
+      - CORS_ALLOWED_ORIGINS=http://localhost:5173,http://localhost:3000
+    depends_on:
+      - mongodb
+
+volumes:
+  mongo-data:

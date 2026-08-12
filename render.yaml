@@ -1,0 +1,45 @@
+services:
+  # Backend: Spring Boot Docker Web Service
+  - type: web
+    name: weatheriq-backend
+    env: docker
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /actuator/health
+    envVars:
+      - key: PORT
+        value: 8080
+      - key: MONGODB_DATABASE
+        value: weatheriq
+      - key: JWT_EXPIRATION
+        value: 86400000
+      - key: SMTP_HOST
+        value: smtp.gmail.com
+      - key: SMTP_PORT
+        value: 587
+      - key: VERIFICATION_TOKEN_EXPIRY_MINUTES
+        value: 10
+      - key: OPEN_METEO_BASE_URL
+        value: https://api.open-meteo.com/v1/forecast
+      - key: OPEN_METEO_GEOCODING_URL
+        value: https://geocoding-api.open-meteo.com/v1/search
+      - key: OPEN_METEO_AIR_QUALITY_URL
+        value: https://air-quality-api.open-meteo.com/v1/air-quality
+      # Secrets to be configured in Render Dashboard Environment:
+      # - MONGODB_URI
+      # - JWT_SECRET
+      # - SMTP_USERNAME
+      # - SMTP_PASSWORD
+      # - MAIL_FROM
+      # - FRONTEND_URL
+      # - CORS_ALLOWED_ORIGINS
+
+  # Frontend: React + Vite Static Site
+  - type: static
+    name: weatheriq-frontend
+    rootDir: frontend
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist
+    envVars:
+      # Set to your Render Backend URL on deployment e.g. https://weatheriq-backend.onrender.com/api
+      - key: VITE_API_BASE_URL
+        sync: false

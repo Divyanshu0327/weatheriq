@@ -1,0 +1,643 @@
+{
+	"info": {
+		"_postman_id": "weatheriq-api-collection-2026",
+		"name": "WeatherIQ REST API Collection",
+		"description": "Complete production REST API collection for WeatherIQ - Weather Intelligence & Personal Alerts Platform",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:8080",
+			"type": "string"
+		},
+		{
+			"key": "authToken",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "userToken",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "adminToken",
+			"value": "",
+			"type": "string"
+		}
+	],
+	"item": [
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "Login User (Development User)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"if (jsonData.success && jsonData.data && jsonData.data.token) {",
+									"    pm.collectionVariables.set('authToken', jsonData.data.token);",
+									"    pm.collectionVariables.set('userToken', jsonData.data.token);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"user@weatheriq.local\",\n  \"password\": \"User@12345\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/auth/login",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "auth", "login"]
+						}
+					}
+				},
+				{
+					"name": "Login Admin (Development Admin)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"if (jsonData.success && jsonData.data && jsonData.data.token) {",
+									"    pm.collectionVariables.set('authToken', jsonData.data.token);",
+									"    pm.collectionVariables.set('adminToken', jsonData.data.token);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"admin@weatheriq.local\",\n  \"password\": \"Admin@12345\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/auth/login",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "auth", "login"]
+						}
+					}
+				},
+				{
+					"name": "Register User",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"John Doe\",\n  \"email\": \"johndoe@example.com\",\n  \"password\": \"Password123!\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/auth/register",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "auth", "register"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Weather & Location Data",
+			"item": [
+				{
+					"name": "Search City Location",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/locations/search?name=Delhi",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "locations", "search"],
+							"query": [
+								{
+									"key": "name",
+									"value": "Delhi"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Get Current Weather",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/weather/current?latitude=28.6139&longitude=77.2090",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "weather", "current"],
+							"query": [
+								{
+									"key": "latitude",
+									"value": "28.6139"
+								},
+								{
+									"key": "longitude",
+									"value": "77.2090"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Get Hourly Weather Forecast",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/weather/hourly?latitude=28.6139&longitude=77.2090",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "weather", "hourly"],
+							"query": [
+								{
+									"key": "latitude",
+									"value": "28.6139"
+								},
+								{
+									"key": "longitude",
+									"value": "77.2090"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Get Daily 7-10 Day Forecast",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/weather/forecast?latitude=28.6139&longitude=77.2090",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "weather", "forecast"],
+							"query": [
+								{
+									"key": "latitude",
+									"value": "28.6139"
+								},
+								{
+									"key": "longitude",
+									"value": "77.2090"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Get Air Quality Index (AQI)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/air-quality?latitude=28.6139&longitude=77.2090",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "air-quality"],
+							"query": [
+								{
+									"key": "latitude",
+									"value": "28.6139"
+								},
+								{
+									"key": "longitude",
+									"value": "77.2090"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Get Weather Intelligence Recommendations",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/weather/intelligence?latitude=28.6139&longitude=77.2090",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "weather", "intelligence"],
+							"query": [
+								{
+									"key": "latitude",
+									"value": "28.6139"
+								},
+								{
+									"key": "longitude",
+									"value": "77.2090"
+								}
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "User Profile (Protected)",
+			"item": [
+				{
+					"name": "Get Current User Profile",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/users/me",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "users", "me"]
+						}
+					}
+				},
+				{
+					"name": "Update User Profile",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Development User Updated\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/users/me",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "users", "me"]
+						}
+					}
+				},
+				{
+					"name": "Update User Preferences",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"defaultCity\": \"Delhi\",\n  \"temperatureUnit\": \"CELSIUS\",\n  \"notificationEnabled\": true,\n  \"emailNotificationsEnabled\": true\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/users/preferences",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "users", "preferences"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Saved Cities (Protected)",
+			"item": [
+				{
+					"name": "Get Saved Cities",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/cities",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "cities"]
+						}
+					}
+				},
+				{
+					"name": "Save City",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"city\": \"Delhi\",\n  \"country\": \"India\",\n  \"latitude\": 28.6139,\n  \"longitude\": 77.2090,\n  \"timezone\": \"Asia/Kolkata\",\n  \"isDefault\": true\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/cities",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "cities"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Smart Weather Alerts (Protected)",
+			"item": [
+				{
+					"name": "Get User Alerts",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/alerts",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "alerts"]
+						}
+					}
+				},
+				{
+					"name": "Create Weather Alert Rule",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"type\": \"RAIN\",\n  \"threshold\": 60.0,\n  \"enabled\": true,\n  \"city\": \"Delhi\",\n  \"latitude\": 28.6139,\n  \"longitude\": 77.2090\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/alerts",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "alerts"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Travel Mode & History",
+			"item": [
+				{
+					"name": "Get Travel Weather Assessment",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/travel/weather?destination=Mumbai&latitude=19.0760&longitude=72.8777",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "travel", "weather"],
+							"query": [
+								{
+									"key": "destination",
+									"value": "Mumbai"
+								},
+								{
+									"key": "latitude",
+									"value": "19.0760"
+								},
+								{
+									"key": "longitude",
+									"value": "72.8777"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Get Weather History",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/weather-history?city=Delhi",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "weather-history"],
+							"query": [
+								{
+									"key": "city",
+									"value": "Delhi"
+								}
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Admin & Health",
+			"item": [
+				{
+					"name": "Check Health Endpoint",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/health",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "health"]
+						}
+					}
+				},
+				{
+					"name": "Get Admin Dashboard Stats (Admin Only)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/admin/dashboard",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "admin", "dashboard"]
+						}
+					}
+				},
+				{
+					"name": "Get All Users (Admin Only)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/admin/users",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "admin", "users"]
+						}
+					}
+				},
+				{
+					"name": "Get User Details (Admin Only)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/admin/users/USER_ID",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "admin", "users", "USER_ID"]
+						}
+					}
+				},
+				{
+					"name": "Update User Account (Admin Only)",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Updated Name\",\n  \"email\": \"user@weatheriq.local\",\n  \"roles\": [\"ROLE_USER\"],\n  \"enabled\": true,\n  \"emailVerified\": true\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/admin/users/USER_ID",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "admin", "users", "USER_ID"]
+						}
+					}
+				},
+				{
+					"name": "Update User Role (Admin Only)",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"role\": \"ADMIN\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/admin/users/USER_ID/role",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "admin", "users", "USER_ID", "role"]
+						}
+					}
+				},
+				{
+					"name": "Update User Status (Admin Only)",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"enabled\": false\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/admin/users/USER_ID/status",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "admin", "users", "USER_ID", "status"]
+						}
+					}
+				},
+				{
+					"name": "Delete User (Admin Only)",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/admin/users/USER_ID",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "admin", "users", "USER_ID"]
+						}
+					}
+				}
+			]
+		}
+	]
+}
