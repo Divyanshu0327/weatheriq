@@ -122,7 +122,7 @@ public class DatabaseSeeder implements CommandLineRunner {
             log.info("Database seeding check completed.");
         } catch (Exception e) {
             log.error("[DATABASE SEEDING WARNING] Failed to complete database seeding due to MongoDB connectivity or configuration issue: {}", e.getMessage());
-            log.warn("[DATABASE SEEDING SKIPPED] Application will continue startup, but database operations may fail until valid SPRING_DATA_MONGODB_URI is provided.");
+            log.warn("[DATABASE SEEDING SKIPPED] Application will continue startup, but database operations may fail until valid MONGODB_URI is provided.");
         }
     }
 }
