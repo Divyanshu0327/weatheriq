@@ -26,6 +26,8 @@ services:
         value: https://air-quality-api.open-meteo.com/v1/air-quality
       - key: MONGODB_URI
         sync: false
+      - key: SPRING_DATA_MONGODB_URI
+        sync: false
       - key: JWT_SECRET
         sync: false
       - key: SMTP_USERNAME
