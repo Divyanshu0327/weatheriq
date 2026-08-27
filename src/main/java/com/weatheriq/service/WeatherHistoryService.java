@@ -22,28 +22,42 @@ public class WeatherHistoryService {
     private final WeatherHistoryRepository historyRepository;
 
     public List<WeatherHistoryResponse> getWeatherHistory(String city, String startDateStr, String endDateStr) {
-        Instant endDate = endDateStr != null ? Instant.parse(endDateStr) : Instant.now();
-        Instant startDate = startDateStr != null ? Instant.parse(startDateStr) : endDate.minus(7, ChronoUnit.DAYS);
-
         String targetCity = (city != null && !city.isBlank()) ? city.trim() : "Delhi";
 
-        List<WeatherHistoryDocument> docs = historyRepository.findByCityIgnoreCaseAndTimestampBetween(targetCity, startDate, endDate);
-        if (docs == null || docs.isEmpty()) {
-            docs = historyRepository.findByCityIgnoreCase(targetCity);
+        try {
+            Instant endDate = Instant.now();
+            Instant startDate = endDate.minus(7, ChronoUnit.DAYS);
+
+            if (endDateStr != null && !endDateStr.isBlank()) {
+                try {
+                    endDate = Instant.parse(endDateStr);
+                } catch (Exception ignored) {}
+            }
+            if (startDateStr != null && !startDateStr.isBlank()) {
+                try {
+                    startDate = Instant.parse(startDateStr);
+                } catch (Exception ignored) {}
+            }
+
+            List<WeatherHistoryDocument> docs = historyRepository.findByCityIgnoreCaseAndTimestampBetween(targetCity, startDate, endDate);
+            if (docs == null || docs.isEmpty()) {
+                docs = historyRepository.findByCityIgnoreCase(targetCity);
+            }
+
+            if (docs != null && !docs.isEmpty()) {
+                return docs.stream().map(this::mapToResponse).collect(Collectors.toList());
+            }
+        } catch (Exception ex) {
+            log.warn("Database lookup failed or uninitialized for weather history city '{}' ({}). Returning fallback previous week history.", targetCity, ex.getMessage());
         }
 
-        if (docs == null || docs.isEmpty()) {
-            log.info("No saved MongoDB history records for '{}'. Generating previous week (past 7 days) weather report.", targetCity);
-            return generatePreviousWeekHistory(targetCity);
-        }
-
-        return docs.stream().map(this::mapToResponse).collect(Collectors.toList());
+        return generatePreviousWeekHistory(targetCity);
     }
 
     public List<WeatherHistoryResponse> generatePreviousWeekHistory(String city) {
         List<WeatherHistoryResponse> pastWeekList = new ArrayList<>();
         Instant now = Instant.now();
-        Random random = new Random(city.hashCode());
+        Random random = new Random(Math.abs(city.hashCode()));
 
         String[] conditions = {"Partly Cloudy", "Clear Sky", "Sunny", "Light Rain", "Hazy Sunshine", "Scattered Clouds", "Mostly Clear"};
 
@@ -80,19 +94,23 @@ public class WeatherHistoryService {
 
     public void recordObservation(String city, double latitude, double longitude, double temperature,
                                   double humidity, double windSpeed, double rainProbability, Integer aqi, String condition) {
-        WeatherHistoryDocument history = WeatherHistoryDocument.builder()
-                .city(city)
-                .latitude(latitude)
-                .longitude(longitude)
-                .timestamp(Instant.now())
-                .temperature(temperature)
-                .humidity(humidity)
-                .windSpeed(windSpeed)
-                .rainProbability(rainProbability)
-                .aqi(aqi)
-                .weatherCondition(condition)
-                .build();
-        historyRepository.save(history);
+        try {
+            WeatherHistoryDocument history = WeatherHistoryDocument.builder()
+                    .city(city)
+                    .latitude(latitude)
+                    .longitude(longitude)
+                    .timestamp(Instant.now())
+                    .temperature(temperature)
+                    .humidity(humidity)
+                    .windSpeed(windSpeed)
+                    .rainProbability(rainProbability)
+                    .aqi(aqi)
+                    .weatherCondition(condition)
+                    .build();
+            historyRepository.save(history);
+        } catch (Exception ex) {
+            log.warn("Could not save weather history observation to database: {}", ex.getMessage());
+        }
     }
 
     private WeatherHistoryResponse mapToResponse(WeatherHistoryDocument doc) {
