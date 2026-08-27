@@ -1,6 +1,5 @@
 package com.weatheriq.client;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.weatheriq.dto.response.CitySearchResponse;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;

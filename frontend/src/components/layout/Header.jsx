@@ -1,13 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useWeather } from '../../context/WeatherContext';
-import { useAuth } from '../../context/AuthContext';
 import { weatherService } from '../../services/weatherService';
-import { Search, Menu, MapPin, User, Thermometer, Check } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Search, Menu, MapPin, Thermometer } from 'lucide-react';
 
 const Header = ({ onOpenSidebar }) => {
   const { activeLocation, selectCity, temperatureUnit, toggleUnit } = useWeather();
-  const { user } = useAuth();
 
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState([]);
@@ -116,9 +113,8 @@ const Header = ({ onOpenSidebar }) => {
         )}
       </div>
 
-      {/* Right Controls: Unit Toggle & Profile */}
+      {/* Right Controls: °C / °F Unit Toggle */}
       <div className="flex items-center gap-3">
-        {/* °C / °F Unit Toggle */}
         <button
           onClick={toggleUnit}
           className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 text-xs font-bold text-slate-700 transition"
@@ -127,15 +123,6 @@ const Header = ({ onOpenSidebar }) => {
           <Thermometer className="h-4 w-4 text-blue-600" />
           <span>{temperatureUnit === 'CELSIUS' ? '°C' : '°F'}</span>
         </button>
-
-        {/* Profile Shortcut */}
-        <Link
-          to="/settings"
-          className="flex h-10 w-10 items-center justify-center rounded-2xl bg-slate-100 text-slate-700 hover:bg-blue-50 hover:text-blue-600 transition"
-          title="Profile & Settings"
-        >
-          <User className="h-5 w-5" />
-        </Link>
       </div>
     </header>
   );
